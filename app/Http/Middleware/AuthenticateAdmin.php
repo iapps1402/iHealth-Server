@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Support\Facades\Auth;
+
+class AuthenticateAdmin
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        $user = Auth::guard('web')->user();
+        if ($user != null && $user->is_admin)
+            return $next($request);
+
+        return redirect(Route('admin_login'));
+    }
+}
